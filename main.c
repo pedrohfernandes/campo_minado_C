@@ -250,5 +250,42 @@ void checkAndShowAdjacents(int size, int minefield[size][size], int showPosition
             if (positionIsValid(size, row, column + 1))
                 showPosition[row][column + 1] = 1;
         }
+        // Checando as posições diagonais
+        // Direita acima
+        if (positionIsValid(size, row - 1, column + 1) && minefield[row - 1][column + 1] == 0 && showPosition[row - 1][column + 1] == 0)
+            checkAndShowAdjacents(size, minefield, showPosition, row - 1, column + 1);
+
+        else
+        {
+            if (positionIsValid(size, row - 1, column + 1))
+                showPosition[row - 1][column + 1] = 1;
+        }
+        // Esquerda acima
+        if (positionIsValid(size, row - 1, column - 1) && minefield[row - 1][column - 1] == 0 && showPosition[row - 1][column - 1] == 0)
+            checkAndShowAdjacents(size, minefield, showPosition, row - 1, column - 1);
+
+        else
+        {
+            if (positionIsValid(size, row - 1, column - 1))
+                showPosition[row - 1][column - 1] = 1;
+        }
+        // Direita abaixo
+        if (positionIsValid(size, row + 1, column + 1) && minefield[row + 1][column + 1] == 0 && showPosition[row + 1][column + 1] == 0)
+            checkAndShowAdjacents(size, minefield, showPosition, row + 1, column + 1);
+
+        else
+        {
+            if (positionIsValid(size, row + 1, column + 1))
+                showPosition[row + 1][column + 1] = 1;
+        }
+        // Esquerda abaixo
+        if (positionIsValid(size, row + 1, column - 1) && minefield[row + 1][column - 1] == 0 && showPosition[row + 1][column - 1] == 0)
+            checkAndShowAdjacents(size, minefield, showPosition, row + 1, column - 1);
+
+        else
+        {
+            if (positionIsValid(size, row + 1, column - 1))
+                showPosition[row + 1][column - 1] = 1;
+        }
     }
 }
