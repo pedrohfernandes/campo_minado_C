@@ -18,13 +18,13 @@ int main()
         printf("\n** Determine o tamanho do Campo Minado **\n");
         printf(">> DICA: Tamanhos ideais para o campo: 8, 9 ou 10 <<\n\n");
 
-        while (size <= 0 || size > 20)
+        while (size <= 5 || size > 20)
         {
             printf("Digite o tamanho desejado: ");
             scanf("%d", &size);
 
-            if (size <= 0 || size > 20)
-                printf("\nTamanho invalido!\n\n");
+            if (size <= 5 || size > 20)
+                printf("\nTamanho invalido!\nEscolha um numero entre 4 e 21.\n\n");
         }
 
         int showPosition[size][size];
@@ -49,10 +49,10 @@ int main()
             printf("Digite o numero de bombas: ");
             scanf("%d", &bombsNumber);
 
-            if (bombsNumber <= 0 || bombsNumber >= size * size)
-                printf("\nQuantidade invalida!\n\n");
+            if (bombsNumber <= 0 || bombsNumber >= size * size / 2)
+                printf("\nQuantidade invalida!\nEscolha um numero entre 0 e %d\n\n", (size * size) / 2);
 
-        } while (bombsNumber <= 0 || bombsNumber >= size * size);
+        } while (bombsNumber <= 0 || bombsNumber >= size * size / 2);
 
         // Sorteando as posições das bombas
         srand(time(NULL));
@@ -186,14 +186,17 @@ int main()
             printf("\n");
 
             // Determinando a exibição da posição escolhida
-            if (minefield[row][column] == 0)
+            if (positionIsValid(size, row, column) && minefield[row][column] == 0)
                 checkAndShowAdjacents(size, minefield, showPosition, row, column);
 
             else
-                showPosition[row][column] = 1;
+            {
+                if (positionIsValid(size, row, column))
+                    showPosition[row][column] = 1;
+            }
 
             // Determinando o fim do jogo caso uma bomba seja escolhida
-            if (minefield[row][column] >= 50)
+            if (positionIsValid(size, row, column) && minefield[row][column] >= 50)
                 bombSelected = 1;
 
         } while (1);
@@ -219,84 +222,81 @@ int positionIsValid(int size, int row, int column)
 
 void checkAndShowAdjacents(int size, int minefield[size][size], int showPosition[size][size], int row, int column)
 {
+    showPosition[row][column] = 1;
+
     // Checa se as posições adjacentes também não são bombas e determina sua exibição
-    if (positionIsValid(size, row, column))
+    if (positionIsValid(size, row - 1, column) && minefield[row - 1][column] == 0 && showPosition[row - 1][column] == 0)
+        // Chamada recursiva da função para verificar se o adjacente ao adjacente atual (e etc) também não é bomba
+        checkAndShowAdjacents(size, minefield, showPosition, row - 1, column);
+
+    else
     {
-        showPosition[row][column] = 1;
+        // Exibe a posição adjacente que possui contagem de bombas caso não seja 0
+        if (positionIsValid(size, row - 1, column))
+            showPosition[row - 1][column] = 1;
+    }
 
-        if (positionIsValid(size, row - 1, column) && minefield[row - 1][column] == 0 && showPosition[row - 1][column] == 0)
-            // Chamada recursiva da função para verificar se o adjacente ao adjacente atual (e etc) também não é bomba
-            checkAndShowAdjacents(size, minefield, showPosition, row - 1, column);
+    if (positionIsValid(size, row + 1, column) && minefield[row + 1][column] == 0 && showPosition[row + 1][column] == 0)
+        checkAndShowAdjacents(size, minefield, showPosition, row + 1, column);
 
-        else
-        {
-            // Exibe a posição adjacente que possui contagem de bombas caso não seja 0
-            if (positionIsValid(size, row - 1, column))
-                showPosition[row - 1][column] = 1;
-        }
+    else
+    {
+        if (positionIsValid(size, row + 1, column))
+            showPosition[row + 1][column] = 1;
+    }
 
-        if (positionIsValid(size, row + 1, column) && minefield[row + 1][column] == 0 && showPosition[row + 1][column] == 0)
-            checkAndShowAdjacents(size, minefield, showPosition, row + 1, column);
+    if (positionIsValid(size, row, column - 1) && minefield[row][column - 1] == 0 && showPosition[row][column - 1] == 0)
+        checkAndShowAdjacents(size, minefield, showPosition, row, column - 1);
 
-        else
-        {
-            if (positionIsValid(size, row + 1, column))
-                showPosition[row + 1][column] = 1;
-        }
+    else
+    {
+        if (positionIsValid(size, row, column - 1))
+            showPosition[row][column - 1] = 1;
+    }
 
-        if (positionIsValid(size, row, column - 1) && minefield[row][column - 1] == 0 && showPosition[row][column - 1] == 0)
-            checkAndShowAdjacents(size, minefield, showPosition, row, column - 1);
+    if (positionIsValid(size, row, column + 1) && minefield[row][column + 1] == 0 && showPosition[row][column + 1] == 0)
+        checkAndShowAdjacents(size, minefield, showPosition, row, column + 1);
 
-        else
-        {
-            if (positionIsValid(size, row, column - 1))
-                showPosition[row][column - 1] = 1;
-        }
+    else
+    {
+        if (positionIsValid(size, row, column + 1))
+            showPosition[row][column + 1] = 1;
+    }
+    // Checando as posições diagonais
+    // Direita acima
+    if (positionIsValid(size, row - 1, column + 1) && minefield[row - 1][column + 1] == 0 && showPosition[row - 1][column + 1] == 0)
+        checkAndShowAdjacents(size, minefield, showPosition, row - 1, column + 1);
 
-        if (positionIsValid(size, row, column + 1) && minefield[row][column + 1] == 0 && showPosition[row][column + 1] == 0)
-            checkAndShowAdjacents(size, minefield, showPosition, row, column + 1);
+    else
+    {
+        if (positionIsValid(size, row - 1, column + 1))
+            showPosition[row - 1][column + 1] = 1;
+    }
+    // Esquerda acima
+    if (positionIsValid(size, row - 1, column - 1) && minefield[row - 1][column - 1] == 0 && showPosition[row - 1][column - 1] == 0)
+        checkAndShowAdjacents(size, minefield, showPosition, row - 1, column - 1);
 
-        else
-        {
-            if (positionIsValid(size, row, column + 1))
-                showPosition[row][column + 1] = 1;
-        }
-        // Checando as posições diagonais
-        // Direita acima
-        if (positionIsValid(size, row - 1, column + 1) && minefield[row - 1][column + 1] == 0 && showPosition[row - 1][column + 1] == 0)
-            checkAndShowAdjacents(size, minefield, showPosition, row - 1, column + 1);
+    else
+    {
+        if (positionIsValid(size, row - 1, column - 1))
+            showPosition[row - 1][column - 1] = 1;
+    }
+    // Direita abaixo
+    if (positionIsValid(size, row + 1, column + 1) && minefield[row + 1][column + 1] == 0 && showPosition[row + 1][column + 1] == 0)
+        checkAndShowAdjacents(size, minefield, showPosition, row + 1, column + 1);
 
-        else
-        {
-            if (positionIsValid(size, row - 1, column + 1))
-                showPosition[row - 1][column + 1] = 1;
-        }
-        // Esquerda acima
-        if (positionIsValid(size, row - 1, column - 1) && minefield[row - 1][column - 1] == 0 && showPosition[row - 1][column - 1] == 0)
-            checkAndShowAdjacents(size, minefield, showPosition, row - 1, column - 1);
+    else
+    {
+        if (positionIsValid(size, row + 1, column + 1))
+            showPosition[row + 1][column + 1] = 1;
+    }
+    // Esquerda abaixo
+    if (positionIsValid(size, row + 1, column - 1) && minefield[row + 1][column - 1] == 0 && showPosition[row + 1][column - 1] == 0)
+        checkAndShowAdjacents(size, minefield, showPosition, row + 1, column - 1);
 
-        else
-        {
-            if (positionIsValid(size, row - 1, column - 1))
-                showPosition[row - 1][column - 1] = 1;
-        }
-        // Direita abaixo
-        if (positionIsValid(size, row + 1, column + 1) && minefield[row + 1][column + 1] == 0 && showPosition[row + 1][column + 1] == 0)
-            checkAndShowAdjacents(size, minefield, showPosition, row + 1, column + 1);
-
-        else
-        {
-            if (positionIsValid(size, row + 1, column + 1))
-                showPosition[row + 1][column + 1] = 1;
-        }
-        // Esquerda abaixo
-        if (positionIsValid(size, row + 1, column - 1) && minefield[row + 1][column - 1] == 0 && showPosition[row + 1][column - 1] == 0)
-            checkAndShowAdjacents(size, minefield, showPosition, row + 1, column - 1);
-
-        else
-        {
-            if (positionIsValid(size, row + 1, column - 1))
-                showPosition[row + 1][column - 1] = 1;
-        }
+    else
+    {
+        if (positionIsValid(size, row + 1, column - 1))
+            showPosition[row + 1][column - 1] = 1;
     }
 }
