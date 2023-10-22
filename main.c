@@ -111,21 +111,55 @@ int main()
         do
         {
             // Printa os números das colunas
-            printf("\t   ");
-            for (int i = 0; i < size; i++)
-                printf(" %d  ", i);
-            printf("\n");
+            if (size <= 10)
+            {
+                printf("\t   ");
+                for (int i = 0; i < size; i++)
+                    printf(" %d  ", i);
+
+                printf("\n");
+            }
+            else
+            {
+                printf("\t    ");
+                for (int i = 0; i < size; i++)
+                {
+                    if (i < 10)
+                        printf(" %d  ", i);
+
+                    else
+                        printf(" %d ", i);
+                }
+                printf("\n");
+            }
 
             for (int i = 0; i < size; i++)
             {
                 // Printa as linhas de separação
-                printf("\t  ");
-                for (int a = 0; a < lineSize; a++)
-                    printf("-");
+                if (size <= 10)
+                {
+                    printf("\t  ");
+                    for (int a = 0; a < lineSize; a++)
+                        printf("-");
+                }
+                else
+                {
+                    printf("\t   ");
+                    for (int a = 0; a < lineSize; a++)
+                        printf("-");
+                }
 
                 // Printa o número das linhas
-                printf("\n\t%d |", i);
+                if (size <= 10)
+                    printf("\n\t%d |", i);
+                else
+                {
+                    if (i < 10)
+                        printf("\n\t%d  |", i);
 
+                    else
+                        printf("\n\t%d |", i);
+                }
                 // Printa o campo
                 for (int j = 0; j < size; j++)
                 {
@@ -146,9 +180,18 @@ int main()
                 // Printa a última linha de separação
                 if (i == size - 1)
                 {
-                    printf("\t  ");
-                    for (int a = 1; a <= lineSize; a++)
-                        printf("-");
+                    if (size <= 10)
+                    {
+                        printf("\t  ");
+                        for (int a = 0; a < lineSize; a++)
+                            printf("-");
+                    }
+                    else
+                    {
+                        printf("\t   ");
+                        for (int a = 0; a < lineSize; a++)
+                            printf("-");
+                    }
                 }
             }
             printf("\n");
