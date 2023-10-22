@@ -18,13 +18,13 @@ int main()
         printf("\n** Determine o tamanho do Campo Minado **\n");
         printf(">> DICA: Tamanhos ideais para o campo: 8, 9 ou 10 <<\n\n");
 
-        while (size <= 5 || size > 20)
+        while (size < 5 || size > 20)
         {
             printf("Digite o tamanho desejado: ");
             scanf("%d", &size);
 
-            if (size <= 5 || size > 20)
-                printf("\nTamanho invalido!\nEscolha um numero entre 4 e 21.\n\n");
+            if (size < 5 || size > 20)
+                printf("\nTamanho invalido!\nEscolha um numero maior do que 4 e menor do que 21.\n\n");
         }
 
         int showPosition[size][size];
@@ -40,19 +40,19 @@ int main()
             }
         }
 
-        int bombsNumber;
+        int bombsNumber = 0;
 
         printf("\n** Determine a quantidade de bombas no Campo Minado **\n");
         printf(">> DICA: Quantidade de bombas ideal para um campo %dx%d: %d <<\n\n", size, size, size > 10 ? size + 5 : size + 1);
-        do
+
+        while (bombsNumber <= 0 || bombsNumber >= size * size / 2)
         {
             printf("Digite o numero de bombas: ");
             scanf("%d", &bombsNumber);
 
             if (bombsNumber <= 0 || bombsNumber >= size * size / 2)
-                printf("\nQuantidade invalida!\nEscolha um numero entre 0 e %d\n\n", (size * size) / 2);
-
-        } while (bombsNumber <= 0 || bombsNumber >= size * size / 2);
+                printf("\nQuantidade invalida!\nEscolha um numero maior do que 0 e menor do que %d\n\n", size * size / 2);
+        }
 
         // Sorteando as posições das bombas
         srand(time(NULL));
@@ -106,7 +106,7 @@ int main()
         printf("\nCampo gerado:\n\n");
 
         int bombSelected = 0;
-        int lineSize = (size * 4) + 1; // Relação que permite uma exibição correta do campo
+        int lineSize = (size * 4) + 1; // Relação que permite uma exibição visual correta do campo
 
         do
         {
@@ -119,7 +119,7 @@ int main()
 
                 printf("\n");
             }
-            else
+            else // Altera a exibição dos números das colunas para mostrar corretamente índices com dois dígitos
             {
                 printf("\t    ");
                 for (int i = 0; i < size; i++)
@@ -142,7 +142,7 @@ int main()
                     for (int a = 0; a < lineSize; a++)
                         printf("-");
                 }
-                else
+                else // Altera a exibição das linhas para se adequar ao layout para índices com dois dígitos
                 {
                     printf("\t   ");
                     for (int a = 0; a < lineSize; a++)
@@ -152,7 +152,7 @@ int main()
                 // Printa o número das linhas
                 if (size <= 10)
                     printf("\n\t%d |", i);
-                else
+                else // Altera a exibição dos números das linhas para mostrar corretamente índices com dois dígitos
                 {
                     if (i < 10)
                         printf("\n\t%d  |", i);
@@ -165,12 +165,15 @@ int main()
                 {
                     if (!showPosition[i][j])
                         printf(" \xdb |");
+
                     else
                     {
                         if (field[i][j] >= 50)
                             printf(" B |");
+
                         else if (field[i][j] == 0)
                             printf("   |");
+
                         else
                             printf(" %d |", field[i][j]);
                     }
@@ -186,7 +189,7 @@ int main()
                         for (int a = 0; a < lineSize; a++)
                             printf("-");
                     }
-                    else
+                    else // Altera a exibição da linha para se adequar ao layout para índices com dois dígitos
                     {
                         printf("\t   ");
                         for (int a = 0; a < lineSize; a++)
@@ -210,9 +213,7 @@ int main()
                 for (int j = 0; j < size; j++)
                 {
                     if (showPosition[i][j] == 0 && field[i][j] < 50)
-                    {
                         counter++;
-                    }
                 }
             }
             if (!counter)
@@ -221,7 +222,7 @@ int main()
                 break;
             }
 
-            // Escolhendo uma posição
+            // Solicitando ao usuário uma escolha de posição
             int row, column;
             printf("\nEscolha uma posicao (formato: \"l c\")\n");
             printf("Digite a posicao que deseja exibir: ");
