@@ -242,12 +242,16 @@ int main()
 
 int positionIsValid(int size, int row, int column)
 {
-    // Verifica se a posição recebida é válida
+    int isValid;
+
     if (row >= 0 && row < size && column >= 0 && column < size)
-        return 1;
+        // Verifica se a posição recebida é válida
+        isValid = 1;
 
     else
-        return 0;
+        isValid = 0;
+
+    return isValid;
 }
 
 void checkAndShowAdjacents(int size, int field[size][size], int showPosition[size][size], int row, int column)
