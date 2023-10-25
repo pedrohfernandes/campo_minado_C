@@ -69,35 +69,21 @@ int main()
         }
 
         // Identificando o número de bombas existentes ao redor de uma posição
-        for (int i = 0; i < size; i++)
+        for (int row = 0; row < size; row++)
         {
-            for (int j = 0; j < size; j++)
+            for (int column = 0; column < size; column++)
             {
-                if (field[i][j] >= 50) // Verifica se há bomba na posição dado o número arbitrário definido
+                if (field[row][column] >= 50) // Verifica se há bomba na posição dado o número arbitrário definido
                 {
-                    if (positionIsValid(size, i - 1, j))
-                        field[i - 1][j]++; // Posição acima
-
-                    if (positionIsValid(size, i - 1, j - 1))
-                        field[i - 1][j - 1]++; // Posição diagonal a esquerda acima
-
-                    if (positionIsValid(size, i - 1, j + 1))
-                        field[i - 1][j + 1]++; // Posição diagonal a direita acima
-
-                    if (positionIsValid(size, i + 1, j))
-                        field[i + 1][j]++; // Posição abaixo
-
-                    if (positionIsValid(size, i + 1, j - 1))
-                        field[i + 1][j - 1]++; // Posição diagonal a esquerda abaixo
-
-                    if (positionIsValid(size, i + 1, j + 1))
-                        field[i + 1][j + 1]++; // Posição diagonal a direita abaixo
-
-                    if (positionIsValid(size, i, j - 1))
-                        field[i][j - 1]++; // Posição a esquerda
-
-                    if (positionIsValid(size, i, j + 1))
-                        field[i][j + 1]++; // Posição a direita
+                    // Itera por todas as posições adjacentes e incrementa seu valor devido à presença de bomba na posição atual
+                    for (int i = -1; i < 2; i++)
+                    {
+                        for (int j = -1; j < 2; j++)
+                        {
+                            if (positionIsValid(size, row + i, column + j))
+                                field[row + i][column + j]++;
+                        }
+                    }
                 }
             }
         }
@@ -268,79 +254,25 @@ void checkAndShowAdjacents(int size, int field[size][size], int showPosition[siz
 {
     showPosition[row][column] = 1;
 
-    // Checa se as posições adjacentes também não são bombas e determina sua exibição
-    if (positionIsValid(size, row - 1, column) && field[row - 1][column] == 0 && showPosition[row - 1][column] == 0)
-        // Chamada recursiva da função para verificar se o adjacente ao adjacente atual (e etc) também não é bomba
-        checkAndShowAdjacents(size, field, showPosition, row - 1, column);
-
-    else
+    // Itera por todas as posições adjacentes, verifica se não são bombas e determina sua exibição
+    for (int i = -1; i < 2; i++)
     {
-        // Exibe a posição adjacente que possui contagem de bombas caso não seja 0
-        if (positionIsValid(size, row - 1, column))
-            showPosition[row - 1][column] = 1;
-    }
+        for (int j = -1; j < 2; j++)
+        {
+            if (row + i == row && column + j == column)
+                // Evita que a própria posição seja checada novamente
+                continue;
 
-    if (positionIsValid(size, row + 1, column) && field[row + 1][column] == 0 && showPosition[row + 1][column] == 0)
-        checkAndShowAdjacents(size, field, showPosition, row + 1, column);
+            else if (positionIsValid(size, row + i, column + j) && field[row + i][column + j] == 0 && showPosition[row + i][column + j] == 0)
+                // Chamada recursiva da função para verificar se o adjacente ao adjacente atual (e etc) também não é bomba
+                checkAndShowAdjacents(size, field, showPosition, row + i, column + j);
 
-    else
-    {
-        if (positionIsValid(size, row + 1, column))
-            showPosition[row + 1][column] = 1;
-    }
-
-    if (positionIsValid(size, row, column - 1) && field[row][column - 1] == 0 && showPosition[row][column - 1] == 0)
-        checkAndShowAdjacents(size, field, showPosition, row, column - 1);
-
-    else
-    {
-        if (positionIsValid(size, row, column - 1))
-            showPosition[row][column - 1] = 1;
-    }
-
-    if (positionIsValid(size, row, column + 1) && field[row][column + 1] == 0 && showPosition[row][column + 1] == 0)
-        checkAndShowAdjacents(size, field, showPosition, row, column + 1);
-
-    else
-    {
-        if (positionIsValid(size, row, column + 1))
-            showPosition[row][column + 1] = 1;
-    }
-    // Checando as posições diagonais
-    // Direita acima
-    if (positionIsValid(size, row - 1, column + 1) && field[row - 1][column + 1] == 0 && showPosition[row - 1][column + 1] == 0)
-        checkAndShowAdjacents(size, field, showPosition, row - 1, column + 1);
-
-    else
-    {
-        if (positionIsValid(size, row - 1, column + 1))
-            showPosition[row - 1][column + 1] = 1;
-    }
-    // Esquerda acima
-    if (positionIsValid(size, row - 1, column - 1) && field[row - 1][column - 1] == 0 && showPosition[row - 1][column - 1] == 0)
-        checkAndShowAdjacents(size, field, showPosition, row - 1, column - 1);
-
-    else
-    {
-        if (positionIsValid(size, row - 1, column - 1))
-            showPosition[row - 1][column - 1] = 1;
-    }
-    // Direita abaixo
-    if (positionIsValid(size, row + 1, column + 1) && field[row + 1][column + 1] == 0 && showPosition[row + 1][column + 1] == 0)
-        checkAndShowAdjacents(size, field, showPosition, row + 1, column + 1);
-
-    else
-    {
-        if (positionIsValid(size, row + 1, column + 1))
-            showPosition[row + 1][column + 1] = 1;
-    }
-    // Esquerda abaixo
-    if (positionIsValid(size, row + 1, column - 1) && field[row + 1][column - 1] == 0 && showPosition[row + 1][column - 1] == 0)
-        checkAndShowAdjacents(size, field, showPosition, row + 1, column - 1);
-
-    else
-    {
-        if (positionIsValid(size, row + 1, column - 1))
-            showPosition[row + 1][column - 1] = 1;
+            else
+            {
+                if (positionIsValid(size, row + i, column + j))
+                    // Exibe a posição adjacente que possui contagem de bombas caso não seja 0
+                    showPosition[row + i][column + j] = 1;
+            }
+        }
     }
 }
