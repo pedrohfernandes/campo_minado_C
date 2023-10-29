@@ -5,12 +5,10 @@
 int positionIsValid(int size, int row, int column);
 void checkAndShowAdjacents(int size, int field[size][size], int showPosition[size][size], int row, int column);
 
-int main()
-{
+int main() {
     char option = 'S';
 
-    while (option == 'S' || option == 's')
-    {
+    while (option == 'S' || option == 's') {
         printf("\n\n** BEM VINDO(A) AO CAMPO MINADO **\n\n");
 
         int size = 0;
@@ -18,8 +16,7 @@ int main()
         printf("\n** Determine o tamanho do Campo Minado **\n");
         printf(">> DICA: Tamanhos ideais para o campo: 8, 9 ou 10 <<\n\n");
 
-        while (size < 5 || size > 20)
-        {
+        while (size < 5 || size > 20) {
             printf("Digite o tamanho desejado: ");
             scanf("%d", &size);
 
@@ -31,10 +28,8 @@ int main()
         int field[size][size];
 
         // Inicializa todas as posições do campo minado
-        for (int i = 0; i < size; i++)
-        {
-            for (int j = 0; j < size; j++)
-            {
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
                 field[i][j] = 0;
                 showPosition[i][j] = 0;
             }
@@ -45,8 +40,7 @@ int main()
         printf("\n** Determine a quantidade de bombas no Campo Minado **\n");
         printf(">> DICA: Quantidade de bombas ideal para um campo %dx%d: %d <<\n\n", size, size, size > 10 ? size + 5 : size + 1);
 
-        while (bombsNumber <= 0 || bombsNumber >= size * size / 2)
-        {
+        while (bombsNumber <= 0 || bombsNumber >= size * size / 2) {
             printf("Digite o numero de bombas: ");
             scanf("%d", &bombsNumber);
 
@@ -56,8 +50,7 @@ int main()
 
         // Sorteando as posições das bombas
         srand(time(NULL));
-        for (int i = 0; i < bombsNumber; i++)
-        {
+        for (int i = 0; i < bombsNumber; i++) {
             int row = rand() % size;
             int column = rand() % size;
 
@@ -69,17 +62,13 @@ int main()
         }
 
         // Identificando o número de bombas existentes ao redor de uma posição
-        for (int row = 0; row < size; row++)
-        {
-            for (int column = 0; column < size; column++)
-            {
-                if (field[row][column] >= 50) // Verifica se há bomba na posição dado o número arbitrário definido
-                {
+        for (int row = 0; row < size; row++) {
+            for (int column = 0; column < size; column++) {
+                // Verifica se há bomba na posição dado o número arbitrário definido
+                if (field[row][column] >= 50) {
                     // Itera por todas as posições adjacentes e incrementa seu valor devido à presença de bomba na posição atual
-                    for (int i = -1; i < 2; i++)
-                    {
-                        for (int j = -1; j < 2; j++)
-                        {
+                    for (int i = -1; i < 2; i++) {
+                        for (int j = -1; j < 2; j++) {
                             if (positionIsValid(size, row + i, column + j))
                                 field[row + i][column + j]++;
                         }
@@ -94,22 +83,19 @@ int main()
         int bombSelected = 0;
         int lineSize = (size * 4) + 1; // Relação que permite uma exibição visual correta do campo
 
-        do
-        {
+        while (1) {
             // Printa os números das colunas
-            if (size <= 10)
-            {
+            if (size <= 10) {
                 printf("\t   ");
                 for (int i = 0; i < size; i++)
                     printf(" %d  ", i);
 
                 printf("\n");
             }
-            else // Altera a exibição dos números das colunas para mostrar corretamente índices com dois dígitos
-            {
+            // Altera a exibição dos números das colunas para mostrar corretamente índices com dois dígitos
+            else {
                 printf("\t    ");
-                for (int i = 0; i < size; i++)
-                {
+                for (int i = 0; i < size; i++) {
                     if (i < 10)
                         printf(" %d  ", i);
 
@@ -119,17 +105,15 @@ int main()
                 printf("\n");
             }
 
-            for (int i = 0; i < size; i++)
-            {
+            for (int i = 0; i < size; i++) {
                 // Printa as linhas de separação
-                if (size <= 10)
-                {
+                if (size <= 10) {
                     printf("\t  ");
                     for (int a = 0; a < lineSize; a++)
                         printf("-");
                 }
-                else // Altera a exibição das linhas para se adequar ao layout para índices com dois dígitos
-                {
+                // Altera a exibição das linhas para se adequar ao layout para índices com dois dígitos
+                else {
                     printf("\t   ");
                     for (int a = 0; a < lineSize; a++)
                         printf("-");
@@ -138,8 +122,8 @@ int main()
                 // Printa o número das linhas
                 if (size <= 10)
                     printf("\n\t%d |", i);
-                else // Altera a exibição dos números das linhas para mostrar corretamente índices com dois dígitos
-                {
+                // Altera a exibição dos números das linhas para mostrar corretamente índices com dois dígitos
+                else {
                     if (i < 10)
                         printf("\n\t%d  |", i);
 
@@ -147,13 +131,11 @@ int main()
                         printf("\n\t%d |", i);
                 }
                 // Printa o campo
-                for (int j = 0; j < size; j++)
-                {
+                for (int j = 0; j < size; j++) {
                     if (!showPosition[i][j])
                         printf(" \xdb |");
 
-                    else
-                    {
+                    else {
                         if (field[i][j] >= 50)
                             printf(" B |");
 
@@ -167,16 +149,14 @@ int main()
                 printf("\n");
 
                 // Printa a última linha de separação
-                if (i == size - 1)
-                {
-                    if (size <= 10)
-                    {
+                if (i == size - 1) {
+                    if (size <= 10) {
                         printf("\t  ");
                         for (int a = 0; a < lineSize; a++)
                             printf("-");
                     }
-                    else // Altera a exibição da linha para se adequar ao layout para índices com dois dígitos
-                    {
+                    // Altera a exibição da linha para se adequar ao layout para índices com dois dígitos
+                    else {
                         printf("\t   ");
                         for (int a = 0; a < lineSize; a++)
                             printf("-");
@@ -186,24 +166,20 @@ int main()
             printf("\n");
 
             // Verificando se o jogador perdeu
-            if (bombSelected)
-            {
+            if (bombSelected) {
                 printf("\n\nBumm! Voce selecionou uma bomba!\nFim de jogo!\n\n");
                 break;
             }
 
             // Verificando se o jogador ganhou
             int counter = 0;
-            for (int i = 0; i < size; i++)
-            {
-                for (int j = 0; j < size; j++)
-                {
+            for (int i = 0; i < size; i++) {
+                for (int j = 0; j < size; j++) {
                     if (showPosition[i][j] == 0 && field[i][j] < 50)
                         counter++;
                 }
             }
-            if (!counter)
-            {
+            if (!counter) {
                 printf("\n\nParabens! Voce nao selecionou nenhuma bomba!\nGanhou o jogo!\n\n");
                 break;
             }
@@ -219,8 +195,7 @@ int main()
             if (positionIsValid(size, row, column) && field[row][column] == 0)
                 checkAndShowAdjacents(size, field, showPosition, row, column);
 
-            else
-            {
+            else {
                 if (positionIsValid(size, row, column))
                     showPosition[row][column] = 1;
             }
@@ -228,8 +203,7 @@ int main()
             // Determinando o fim do jogo caso uma bomba seja escolhida
             if (positionIsValid(size, row, column) && field[row][column] >= 50)
                 bombSelected = 1;
-
-        } while (1);
+        }
 
         printf("Deseja iniciar um novo jogo (S/N)? ");
         getchar(); // Necessário para capturar o \n armazenado em buffer
@@ -240,12 +214,11 @@ int main()
     return 0;
 }
 
-int positionIsValid(int size, int row, int column)
-{
+int positionIsValid(int size, int row, int column) {
     int isValid;
 
+    // Verifica se a posição recebida é válida
     if (row >= 0 && row < size && column >= 0 && column < size)
-        // Verifica se a posição recebida é válida
         isValid = 1;
 
     else
@@ -254,15 +227,12 @@ int positionIsValid(int size, int row, int column)
     return isValid;
 }
 
-void checkAndShowAdjacents(int size, int field[size][size], int showPosition[size][size], int row, int column)
-{
+void checkAndShowAdjacents(int size, int field[size][size], int showPosition[size][size], int row, int column) {
     showPosition[row][column] = 1;
 
     // Itera por todas as posições adjacentes, verifica se não são bombas e determina sua exibição
-    for (int i = -1; i < 2; i++)
-    {
-        for (int j = -1; j < 2; j++)
-        {
+    for (int i = -1; i < 2; i++) {
+        for (int j = -1; j < 2; j++) {
             if (row + i == row && column + j == column)
                 // Evita que a própria posição seja checada novamente
                 continue;
@@ -271,8 +241,7 @@ void checkAndShowAdjacents(int size, int field[size][size], int showPosition[siz
                 // Chamada recursiva da função para verificar se o adjacente ao adjacente atual (e etc) também não é bomba
                 checkAndShowAdjacents(size, field, showPosition, row + i, column + j);
 
-            else
-            {
+            else {
                 if (positionIsValid(size, row + i, column + j))
                     // Exibe a posição adjacente que possui contagem de bombas caso não seja 0
                     showPosition[row + i][column + j] = 1;
